@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 const login = async (req, res) => {
   const { username, password } = req.body;
   dbs = await initializeDbAndServer();
-  console.log(dbs);
   if (!dbs) {
     return res.status(500).json({ message: "Database not initialized" });
   }
