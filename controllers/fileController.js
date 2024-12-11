@@ -1,4 +1,4 @@
-// fileController.js
+
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
@@ -49,8 +49,8 @@ const uploadFile = async (req, res) => {
     }
 
     await db.run(
-      'INSERT INTO images (serial_number, file_name, file_path) VALUES (?, ?, ?)',
-      [serialNumber, fileName, filePath]
+      'INSERT INTO images (serial_number, file_path) VALUES (?, ?)',
+      [serialNumber, filePath]
     );
 
     res.status(200).json({
@@ -66,7 +66,7 @@ const uploadFile = async (req, res) => {
 };
 const getAllImages = async (req, res) => {
     const db = await initializeDbAndServer();
-    const quary = `SELECT * FROM images`;
+    const quary = `SELECT * FROM images ORDER BY serial_number_add_time DESC LIMIT 8;`;
     const result = await db.all(quary);
     res.status(200).json(result);
   };
@@ -74,7 +74,7 @@ const getAllImages = async (req, res) => {
   const sendImageBySerialNumber = async (req, res) => {
     const { serialNumber } = req.body;
     if (!serialNumber) {
-      return res.status(400).json({ message: "serial nuber not found" });
+      return res.status(400).json({ message: "serial number not found" });
     }
     const db = await initializeDbAndServer();
     const quary = "SELECT file_path FROM images WHERE serial_number = ?";
